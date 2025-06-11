@@ -1,41 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { avalancheFuji } from 'viem/chains';
-import { createMetadata, ExecutionResponse } from '@sherrylinks/sdk';
+import { ExecutionResponse } from '@sherrylinks/sdk';
 import { serialize } from 'wagmi';
-
-export const metadata = createMetadata({
-  label: 'Crear Propuesta',
-  description: 'Crea una nueva propuesta para la DAO estudiantil. Requiere título y descripción.',
-  params: [
-    {
-      name: 'title',
-      label: 'Título de la Propuestddddda',
-      type: 'text',
-      required: true,
-      description: 'Ingresa el título de tu propuesta',
-    },
-    {
-      name: 'description',
-      label: 'Descripción',
-      type: 'textarea',
-      required: true,
-      description: 'Describe los detalles de tu propuesta',
-    },
-  ],
-  response: {
-    type: 'object',
-    properties: {
-      serializedTransaction: { type: 'string', description: 'Transacción serializada para la blockchain' },
-      chainId: { type: 'string', description: 'Nombre de la red blockchain' },
-    },
-  },
-  examples: [
-    {
-      title: 'Implementar sistema de votación electrónica',
-      description: 'Propuesta para modernizar el sistema de votación estudiantil',
-    },
-  ],
-});
 
 export async function POST(req: NextRequest) {
   try {
