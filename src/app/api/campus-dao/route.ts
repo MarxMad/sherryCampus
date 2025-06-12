@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMetadata, Metadata, ValidatedMetadata } from '@sherrylinks/sdk';
+import abi from './blockchain/abi';
 
 export async function GET(req: NextRequest) {
   try {
