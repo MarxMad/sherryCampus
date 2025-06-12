@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       data = encodeFunctionData({
         abi: abi,
         functionName: 'delegateVote',
-        args: [delegateTo],
+        args: [delegateTo as `0x${string}`],
       });
     } else {
       // Calldata para votar
