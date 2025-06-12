@@ -37,9 +37,8 @@ export async function GET(req: NextRequest) {
               type: 'textarea',
               required: true,
               description: 'Describe los detalles, objetivos y beneficios de tu propuesta.'
-            },
-            
-          ],
+            }
+          ]
         },
         {
           type: 'dynamic',
@@ -64,8 +63,8 @@ export async function GET(req: NextRequest) {
               options: [
                 { label: 'A favor', value: 'yes' },
                 { label: 'En contra', value: 'no' },
-                { label: 'Abstención', value: 'abstain' },
-              ],
+                { label: 'Abstención', value: 'abstain' }
+              ]
             },
             {
               name: 'delegateTo',
@@ -73,8 +72,8 @@ export async function GET(req: NextRequest) {
               type: 'text',
               required: false,
               description: 'Dirección de la wallet a la que deseas delegar tu voto (opcional).'
-            },
-          ],
+            }
+          ]
         },
         {
           type: 'http',
@@ -88,7 +87,7 @@ export async function GET(req: NextRequest) {
               required: true,
               description: 'Identificador único de la propuesta a consultar.'
             }
-          ],
+          ]
         },
         {
           type: 'dynamic',
@@ -117,10 +116,9 @@ export async function GET(req: NextRequest) {
               type: 'textarea',
               required: true,
               description: 'Escribe tu comentario, pregunta o sugerencia.'
-            },
-          ],
-        },
-        // Aquí puedes añadir más acciones como comentarios, seguimiento, etc.
+            }
+          ]
+        }
       ],
     };
 
