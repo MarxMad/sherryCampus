@@ -35,15 +35,25 @@ export async function GET(req: NextRequest) {
       fromBlock: 'earliest',
       toBlock: 'latest',
       events: [
-        { event: 'ProposalCreated', args: { id: BigInt(proposalId) } },
-        { event: 'Voted', args: { proposalId: BigInt(proposalId) } },
-        { event: 'Commented', args: { proposalId: BigInt(proposalId) } },
-      ],
-      abi,
+        {
+          ...abi.find(e => e.name === 'ProposalCreated' && e.type === 'event'),
+          args: { id: BigInt(proposalId) }
+        },
+        {
+          ...abi.find(e => e.name === 'Voted' && e.type === 'event'),
+          args: { proposalId: BigInt(proposalId) }
+        },
+        {
+          ...abi.find(e => e.name === 'Commented' && e.type === 'event'),
+          args: { proposalId: BigInt(proposalId) }
+        }
+      ]
     });
 
     const history = events.map((log) => {
-      const { eventName, args, blockNumber } = log;
+      const l = log as any; // Forzar acceso dinámico
+      const eventName = l.eventName || l._eventName || 'Evento';
+      const args = l.args || l._args || {};
       let action = eventName;
       let author = '';
       let description = '';
@@ -66,7 +76,7 @@ export async function GET(req: NextRequest) {
         author,
         description,
         timestamp,
-        blockNumber,
+        blockNumber: l.blockNumber,
       };
     });
 
