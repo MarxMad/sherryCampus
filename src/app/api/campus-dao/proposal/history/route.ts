@@ -14,6 +14,21 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
+function serializeBigInt(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(serializeBigInt);
+  } else if (typeof obj === 'object' && obj !== null) {
+    const newObj: any = {};
+    for (const key in obj) {
+      newObj[key] = serializeBigInt(obj[key]);
+    }
+    return newObj;
+  } else if (typeof obj === 'bigint') {
+    return obj.toString();
+  }
+  return obj;
+}
+
 async function getProposalOnly(proposalId: string) {
   try {
     const proposal = await client.readContract({
@@ -22,10 +37,16 @@ async function getProposalOnly(proposalId: string) {
       functionName: 'getProposal',
       args: [BigInt(proposalId)],
     });
-    return { proposalId, proposal };
-  } catch (e) {
-    console.error('Error al leer estado de la propuesta:', e);
-    return { proposalId, proposal: null };
+    return { proposalId, proposal: serializeBigInt(proposal) };
+  } catch (e: any) {
+    const errorMsg = String(e?.message || e);
+    console.error('Error al leer estado de la propuesta:', errorMsg);
+    if (errorMsg.includes('La propuesta no existe')) {
+      // Error específico del contrato
+      return { proposalId, proposal: null, error: 'La propuesta no existe' };
+    }
+    // Otro error
+    return { proposalId, proposal: null, error: errorMsg };
   }
 }
 
@@ -40,6 +61,11 @@ export async function GET(req: NextRequest) {
       );
     }
     const result = await getProposalOnly(proposalId);
+    if (result.error === 'La propuesta no existe') {
+      return NextResponse.json(result, { status: 404, headers: corsHeaders });
+    } else if (result.error) {
+      return NextResponse.json(result, { status: 500, headers: corsHeaders });
+    }
     return NextResponse.json(result, { headers: corsHeaders });
   } catch (error) {
     return NextResponse.json(
@@ -60,6 +86,11 @@ export async function POST(req: NextRequest) {
       );
     }
     const result = await getProposalOnly(proposalId);
+    if (result.error === 'La propuesta no existe') {
+      return NextResponse.json(result, { status: 404, headers: corsHeaders });
+    } else if (result.error) {
+      return NextResponse.json(result, { status: 500, headers: corsHeaders });
+    }
     return NextResponse.json(result, { headers: corsHeaders });
   } catch (error) {
     return NextResponse.json(
