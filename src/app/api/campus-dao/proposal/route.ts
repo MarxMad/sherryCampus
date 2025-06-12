@@ -3,7 +3,9 @@ import { avalancheFuji } from 'viem/chains';
 import { encodeFunctionData } from 'viem';
 import { serialize } from 'wagmi';
 import { ExecutionResponse } from '@sherrylinks/sdk';
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../../../contract';
+import { abi } from '../blockchain/abi';
+
+const CONTRACT_ADDRESS = '0x8aD6bEa6027a4006EDd49E86Ec6E5A8dEf0a63d2';
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     // Codifica el calldata para createProposal(string,string)
     const data = encodeFunctionData({
-      abi: CONTRACT_ABI,
+      abi: abi,
       functionName: 'createProposal',
       args: [title, description],
     });
