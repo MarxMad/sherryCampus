@@ -38,39 +38,54 @@ export async function POST(req: NextRequest) {
 
     console.log('Crear propuesta - title:', title, 'description:', description);
 
-    // Codifica el calldata para createProposal(string,string)
-    const data = encodeFunctionData({
-      abi: abi,
-      functionName: 'createProposal',
-      args: [title, description],
-    });
+    try {
+      console.log('Antes de encodeFunctionData');
+      const data = encodeFunctionData({
+        abi: abi,
+        functionName: 'createProposal',
+        args: [title, description],
+      });
+      console.log('Calldata generado:', data);
 
-    // Construye la transacción
-    const tx = {
-      to: CONTRACT_ADDRESS,
-      data,
-      value: BigInt(0),
-      chainId: avalancheFuji.id,
-    };
+      console.log('Antes de serializar');
+      const tx = {
+        to: CONTRACT_ADDRESS,
+        data,
+        value: BigInt(0),
+        chainId: avalancheFuji.id,
+      };
+      const serialized = serialize(tx);
+      console.log('Transacción serializada:', serialized);
 
-    // Serializa la transacción
-    const serialized = serialize(tx);
+      // Responde como espera Sherry
+      const resp: ExecutionResponse = {
+        serializedTransaction: serialized,
+        chainId: avalancheFuji.name,
+      };
 
-    // Responde como espera Sherry
-    const resp: ExecutionResponse = {
-      serializedTransaction: serialized,
-      chainId: avalancheFuji.name,
-    };
-
-    // Retornar la respuesta con headers CORS
-    return NextResponse.json(resp, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    });
+      // Retornar la respuesta con headers CORS
+      return NextResponse.json(resp, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      });
+    } catch (error) {
+      console.error('Error en generación de calldata o serialización:', error);
+      return NextResponse.json(
+        { error: 'Error Interno del Servidor', details: String(error) },
+        {
+          status: 500,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
+    }
   } catch (error) {
     console.error('Error en petición POST:', error);
     return NextResponse.json(
