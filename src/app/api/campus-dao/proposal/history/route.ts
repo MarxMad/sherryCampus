@@ -80,8 +80,21 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    return NextResponse.json({ proposalId, proposal, history });
+    return NextResponse.json({ proposalId, proposal, history }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
   } catch (error) {
-    return NextResponse.json({ error: 'Error interno del servidor', details: String(error) }, { status: 500 });
+    return NextResponse.json({ error: 'Error interno del servidor', details: String(error) }, {
+      status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
   }
 } 
