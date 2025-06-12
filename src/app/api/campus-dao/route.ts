@@ -80,7 +80,9 @@ export async function GET(req: NextRequest) {
           type: 'blockchain',
           label: 'Ver Historial de Propuesta',
           chains: { source: 'fuji' },
-          path: `/api/campus-dao/proposal/history`,
+          address: '0x8aD6bEa6027a4006EDd49E86Ec6E5A8dEf0a63d2',
+          abi: require('./blockchain/abi').abi,
+          functionName: 'getProposal',
           params: [
             {
               name: 'proposalId',
