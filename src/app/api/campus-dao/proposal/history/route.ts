@@ -30,10 +30,12 @@ export async function GET(req: NextRequest) {
     }
 
     // 2. Leer el historial de eventos
+    const latestBlock = await client.getBlockNumber();
+    const fromBlock = latestBlock > BigInt(2048) ? latestBlock - BigInt(2048) : BigInt(0);
     const events = await client.getLogs({
       address: CONTRACT_ADDRESS,
-      fromBlock: 'earliest',
-      toBlock: 'latest',
+      fromBlock,
+      toBlock: latestBlock,
       events: [
         {
           ...abi.find(e => e.name === 'ProposalCreated' && e.type === 'event'),

@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
     if (!title || !description) {
       return NextResponse.json(
-        { error: 'Título y descripción son requeridos' },
+        { error: 'Título y descripción son requeridos', title, description },
         {
           status: 400,
           headers: {
@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
         }
       );
     }
+
+    console.log('Crear propuesta - title:', title, 'description:', description);
 
     // Codifica el calldata para createProposal(string,string)
     const data = encodeFunctionData({

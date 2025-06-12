@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
     if (!proposalId || !author || !content) {
       return NextResponse.json({ error: 'Todos los campos son requeridos' }, { status: 400 });
     }
+    console.log('Comentar propuesta - proposalId:', proposalId, 'author:', author, 'content:', content);
     const data = encodeFunctionData({
       abi: abi,
       functionName: 'commentProposal',
