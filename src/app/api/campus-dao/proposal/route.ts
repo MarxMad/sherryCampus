@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { avalancheFuji } from 'viem/chains';
-import { ExecutionResponse } from '@sherrylinks/sdk';
+import { encodeFunctionData } from 'viem';
 import { serialize } from 'wagmi';
+import { ExecutionResponse } from '@sherrylinks/sdk';
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../../../contract';
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,18 +34,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Crear la transacción para el contrato inteligente
+    // Codifica el calldata para createProposal(string,string)
+    const data = encodeFunctionData({
+      abi: CONTRACT_ABI,
+      functionName: 'createProposal',
+      args: [title, description],
+    });
+
+    // Construye la transacción
     const tx = {
-      to: '0x5ee75a1B1648C023e885E58bD3735Ae273f2cc52', // Dirección del contrato
-      data: '0x', // Aquí irá el calldata para createProposal
+      to: CONTRACT_ADDRESS,
+      data,
       value: BigInt(0),
       chainId: avalancheFuji.id,
     };
 
-    // Serializar la transacción para la blockchain
+    // Serializa la transacción
     const serialized = serialize(tx);
 
-    // Crear el objeto de respuesta que Sherry espera
+    // Responde como espera Sherry
     const resp: ExecutionResponse = {
       serializedTransaction: serialized,
       chainId: avalancheFuji.name,

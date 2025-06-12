@@ -1,75 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { avalancheFuji } from 'viem/chains';
-import { createMetadata, Metadata, ValidatedMetadata, ExecutionResponse } from '@sherrylinks/sdk';
+import { encodeFunctionData } from 'viem';
 import { serialize } from 'wagmi';
+import { ExecutionResponse } from '@sherrylinks/sdk';
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../../../contract';
 
 export async function POST(req: NextRequest) {
   try {
-    // Paso 1: Extraer parámetros de la URL
     const { searchParams } = new URL(req.url);
     const proposalId = searchParams.get('proposalId');
     const vote = searchParams.get('vote');
+    const delegateTo = searchParams.get('delegateTo');
 
     if (!proposalId || !vote) {
       return NextResponse.json(
         { error: 'ID de propuesta y voto son requeridos' },
-        {
-          status: 400,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-          },
-        }
+        { status: 400 }
       );
     }
 
-    // Validar que el voto sea "sí" o "no"
-    if (vote !== 'sí' && vote !== 'no') {
-      return NextResponse.json(
-        { error: 'El voto debe ser "sí" o "no"' },
-        {
-          status: 400,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-          },
-        }
-      );
+    let data;
+    if (delegateTo) {
+      // Calldata para delegar voto
+      data = encodeFunctionData({
+        abi: CONTRACT_ABI,
+        functionName: 'delegateVote',
+        args: [delegateTo],
+      });
+    } else {
+      // Calldata para votar
+      let support;
+      if (vote === 'yes' || vote === 'sí') support = true;
+      else if (vote === 'no') support = false;
+      else return NextResponse.json({ error: 'Voto inválido' }, { status: 400 });
+      data = encodeFunctionData({
+        abi: CONTRACT_ABI,
+        functionName: 'voteProposal',
+        args: [BigInt(proposalId), support],
+      });
     }
 
-    // Crear la transacción para el contrato inteligente
     const tx = {
-      to: '0x5ee75a1B1648C023e885E58bD3735Ae273f2cc52', // Reemplazar con la dirección del contrato
-      data: '0x', // Aquí irá el calldata para vote
+      to: CONTRACT_ADDRESS,
+      data,
       value: BigInt(0),
       chainId: avalancheFuji.id,
     };
-
-    // Serializar la transacción para la blockchain
     const serialized = serialize(tx);
-
-    // Crear el objeto de respuesta que Sherry espera
     const resp: ExecutionResponse = {
       serializedTransaction: serialized,
       chainId: avalancheFuji.name,
     };
-
-    // Retornar la respuesta con headers CORS
-    return NextResponse.json(resp, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    });
+    return NextResponse.json(resp, { status: 200 });
   } catch (error) {
     console.error('Error en petición POST:', error);
-    return NextResponse.json(
-      { error: 'Error Interno del Servidor' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Error Interno del Servidor' }, { status: 500 });
   }
 } 
