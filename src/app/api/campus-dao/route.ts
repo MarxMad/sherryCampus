@@ -38,13 +38,7 @@ export async function GET(req: NextRequest) {
               required: true,
               description: 'Describe los detalles, objetivos y beneficios de tu propuesta.'
             },
-            {
-              name: 'image',
-              label: 'Enlace de la Foto de la Propuesta',
-              type: 'url',
-              required: false,
-              description: 'Pega el enlace de la imagen de tu propuesta (puedes subirla a imgur, IPFS, etc.)'
-            },
+            
           ],
         },
         {
