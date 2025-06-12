@@ -9,7 +9,10 @@ const CONTRACT_ADDRESS = '0x8aD6bEa6027a4006EDd49E86Ec6E5A8dEf0a63d2';
 
 export async function POST(req: NextRequest) {
   try {
-    const { proposalId, author, content } = await req.json();
+    const { searchParams } = new URL(req.url);
+    const proposalId = searchParams.get('proposalId');
+    const author = searchParams.get('author');
+    const content = searchParams.get('content');
     if (!proposalId || !author || !content) {
       return NextResponse.json({ error: 'Todos los campos son requeridos' }, { status: 400 });
     }

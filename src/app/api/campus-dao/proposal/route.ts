@@ -9,18 +9,10 @@ const CONTRACT_ADDRESS = '0x8aD6bEa6027a4006EDd49E86Ec6E5A8dEf0a63d2';
 
 export async function POST(req: NextRequest) {
   try {
-    // Extraer parámetros del body o de la URL
-    let title = '';
-    let description = '';
-    if (req.headers.get('content-type')?.includes('application/json')) {
-      const body = await req.json();
-      title = body.title;
-      description = body.description;
-    } else {
-      const { searchParams } = new URL(req.url);
-      title = searchParams.get('title') || '';
-      description = searchParams.get('description') || '';
-    }
+    // Extraer parámetros solo de los query params
+    const { searchParams } = new URL(req.url);
+    const title = searchParams.get('title') || '';
+    const description = searchParams.get('description') || '';
 
     if (!title || !description) {
       return NextResponse.json(
