@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
     const metadata: Metadata = {
       url: 'https://sherry.social',
-      icon: 'https://avatars.githubusercontent.com/u/117962315',
+      icon: 'https://api.pinata.cloud/pinata/ipfs/QmTM58hVZih4PtgraeRaASt6U6eGgcEE2MmaK3Ub66F8hv',
       title: 'CampusDAO Connect by CriptoUNAM',
       baseUrl: serverUrl,
       description: 'Plataforma de gobernanza estudiantil y networking universitario',
