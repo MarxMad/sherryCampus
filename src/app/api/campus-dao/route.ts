@@ -79,7 +79,6 @@ export async function GET(req: NextRequest) {
         {
           type: 'blockchain',
           label: 'Ver Historial de Propuesta',
-          description: 'Consulta el historial de cambios, votos y comentarios de una propuesta específica.',
           chains: { source: 'fuji' },
           path: `/api/campus-dao/proposal/history`,
           params: [
