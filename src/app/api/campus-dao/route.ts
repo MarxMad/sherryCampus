@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMetadata, Metadata, ValidatedMetadata } from '@sherrylinks/sdk';
-import { abi } from './blockchain/abi';
-
 
 export async function GET(req: NextRequest) {
   try {
@@ -79,12 +77,11 @@ export async function GET(req: NextRequest) {
           ],
         },
         {
-          type: 'blockchain',
+          type: 'dynamic',
           label: 'Ver Historial de Propuesta',
-          address: '0x8aD6bEa6027a4006EDd49E86Ec6E5A8dEf0a63d2',
-          abi: abi,
-          functionName: 'getProposal',
+          description: 'Consulta el historial de cambios, votos y comentarios de una propuesta específica.',
           chains: { source: 'fuji' },
+          path: `/api/campus-dao/proposal/history`,
           params: [
             {
               name: 'proposalId',
