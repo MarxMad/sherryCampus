@@ -134,7 +134,7 @@ export async function GET(req: NextRequest) {
     }
 
     console.log('[ANALYZE] Resultado:', analysis);
-    return NextResponse.json({ data: analysis }, {
+    return NextResponse.json(analysis, {
       status: 200,
       headers: {
         'Access-Control-Allow-Origin': '*',

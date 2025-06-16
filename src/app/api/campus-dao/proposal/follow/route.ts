@@ -174,13 +174,3 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// Función auxiliar para notificar a los seguidores
-export async function notifyFollowers(proposalId: string, eventType: string, data: any) {
-  const proposalFollowers = followers.get(proposalId);
-  if (!proposalFollowers) return;
-
-  // Aquí implementarías la lógica real de notificación
-  // Por ejemplo, enviar emails, push notifications, etc.
-  console.log(`Notificando a ${proposalFollowers.size} seguidores de la propuesta ${proposalId}`);
-  console.log(`Evento: ${eventType}`, data);
-} 
