@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
     if (!proposalId) {
       return NextResponse.json(
         { error: 'proposalId es requerido' },
-        {
+      {
           status: 400,
           headers: corsHeaders
         }

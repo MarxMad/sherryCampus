@@ -5,7 +5,7 @@ import { serialize } from 'wagmi';
 import { ExecutionResponse } from '@sherrylinks/sdk';
 import { abi } from '../blockchain/abi';
 
-const CONTRACT_ADDRESS = '0x8aD6bEa6027a4006EDd49E86Ec6E5A8dEf0a63d2';
+const CONTRACT_ADDRESS = '0xf5f14C03B7B7a22b0C536B7b992abb67dF2EFbb3';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
     const proposalId = searchParams.get('proposalId');
     const vote = searchParams.get('vote');
     const delegateTo = searchParams.get('delegateTo');
+    const reason = searchParams.get('reason') || '';
 
     if (!proposalId || !vote) {
       return NextResponse.json(
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
       data = encodeFunctionData({
         abi: abi,
         functionName: 'voteProposal',
-        args: [BigInt(proposalId), support],
+        args: [BigInt(proposalId), support, reason],
       });
     }
 

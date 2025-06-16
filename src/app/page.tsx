@@ -66,12 +66,12 @@ export default function Home() {
               <svg className="w-12 h-12 mb-4 text-cyan-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m4 0h-1v-4h-1m-4 0h-1v-4h-1m4 0h-1v-4h-1" /></svg>
               <h3 className="font-bold text-xl mb-2 font-mono">Transparencia total</h3>
               <p className="text-gray-700">Todas las propuestas y votaciones quedan registradas y auditables por la comunidad estudiantil.</p>
-            </div>
+              </div>
             <div className="bg-gradient-to-br from-indigo-100 to-white rounded-2xl shadow-lg p-8 flex flex-col items-center text-center hover:scale-105 transition-transform border border-indigo-100">
               <svg className="w-12 h-12 mb-4 text-indigo-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
               <h3 className="font-bold text-xl mb-2 font-mono">Fácil de usar</h3>
               <p className="text-gray-700">Interfaz intuitiva, moderna y accesible para cualquier estudiante o miembro del campus.</p>
-            </div>
+          </div>
           </div>
         </div>
       </section>
